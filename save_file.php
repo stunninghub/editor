@@ -12,7 +12,7 @@ $row = mysqli_fetch_array($result);
 
 $myfile = fopen($row['file_address'], "w") or die("Unable to open file!");
 if(fwrite($myfile, $file_context)){
-	echo "ok";
+	echo "File saved";
 }else{
 	echo "Failed to save";
 }
