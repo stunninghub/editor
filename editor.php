@@ -24,7 +24,7 @@ session_start();
 	<h1>Hello <?php echo ucfirst(strtolower($_SESSION['username']));?> !</h1>
 	<button class="btn btn-warning" onclick="run_code();">Run</button>
 	<button class="btn btn-primary" data-target="#new_file" data-toggle="modal">New File</button>
-	<button class="btn btn-success">Save</button>
+	<button class="btn btn-success save_btn" onclick="save_file();">Save</button>
 	<button class="btn btn-danger float-right" onclick="document.location = 'logout.php'">Sign Out</button>
 	<br><br>
 	<div class="row">
@@ -85,9 +85,13 @@ session_start();
 
 		window.onload = function(){
 			fetch_files();
+			if(open_file_id == "" || open_file_id == null){
+				$(".save_btn").attr("disabled",'disabled');
+			}
 		}
 
 		function open_file(file_id){
+			open_file_id = file_id;
 			var req = new XMLHttpRequest;
 			req.onreadystatechange = function(){
 				if(this.readyState == 4 && this.status == 200){
@@ -96,11 +100,23 @@ session_start();
 					   dataType: "text",
 					   success : function (data) {
 					       $("#code_field").text(data);
+					       $(".save_btn").attr("disabled",false);
 					   }
 					});
 				}
 			}
 			req.open("post","open_file.php?file_id="+file_id,false);
+			req.send();
+		}
+
+		function save_file(){
+			var req = new XMLHttpRequest;
+			req.onreadystatechange = function(){
+				if(this.readyState == 4 && this.status == 200){
+					alert(this.responseText);
+				}
+			}
+			req.open("post","save_file.php?file_id="+open_file_id+"&file_context="+$("#code_field").val(),false);
 			req.send();
 		}
 		function fetch_files(){
