@@ -21,12 +21,33 @@ if(empty($_SESSION['username'])){
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css2?family=Overpass+Mono&display=swap" rel="stylesheet">
 	<style type="text/css">
-		:root{
-			--BGcolor:#f3f3f3;
-			--anctcolor:#eee;
-
-			--text:#333;
+		<?php
+		if($_SESSION['dark_mode']=="dark"){
+			echo "
+			:root{
+				--BGcolor:#333;
+				--anctcolor:#222;
+				--text:#fff;
+			}
+			";
+		}elseif($_SESSION['dark_mode']=="light"){
+			echo "
+			:root{
+				--BGcolor:#f3f3f3;
+				--anctcolor:#eee;
+				--text:#333;
+			}
+			";
+		}else{
+			echo "
+			:root{
+				--BGcolor:#f3f3f3;
+				--anctcolor:#eee;
+				--text:#333;
+			}
+			";
 		}
+		?>
 		::-webkit-scrollbar {
 			width: 6px;
 			appearance:none;
@@ -164,6 +185,7 @@ if(empty($_SESSION['username'])){
 			window.open("<?php echo $_SESSION['username'];?>/");
 		}
 		var open_file_id = "";
+		var five_save_status = "";
 		window.onbeforeunload = function(e) { return "Save your work otherwise your work will be lost."; };
 		window.onload = function(){
 			fetch_files();
@@ -180,10 +202,12 @@ if(empty($_SESSION['username'])){
 				document.documentElement.style.setProperty('--BGcolor', '#333');
 				document.documentElement.style.setProperty('--anctcolor', '#222');
 				document.documentElement.style.setProperty('--text', '#fff');
+				update_dark_mode("dark");
 			}else{
 				document.documentElement.style.setProperty('--BGcolor', '#f3f3f3');
 				document.documentElement.style.setProperty('--anctcolor', '#eee');
 				document.documentElement.style.setProperty('--text', '#333');
+				update_dark_mode("light");
 			}
 		}
 		function toggle_modal(){
@@ -201,12 +225,9 @@ if(empty($_SESSION['username'])){
 			    }
 		    }
 		});
-		$("#code_field").bind("keyup keydown", function(){
-			$(document).bind("keyup keydown", function(e){
-				if(!(e.ctrlKey && e.which == 83)){
-					$('.save_btn').attr('disabled',false);
-				}
-			});
+		$("#code_field").bind("keydown", function(){
+			$('.save_btn').attr('disabled',false);
+			five_save_status = "unsaved";
 		});
 		function open_file(file_id){
 			open_file_id = file_id;
@@ -238,19 +259,32 @@ if(empty($_SESSION['username'])){
 			$(".file_name_display").html(name);
 		}
 		function save_file(){
-			var data = new FormData();
-			data.append("file_id",open_file_id);
-			data.append("file_context",$("#code_field").val());
+			if(five_save_status == "unsaved"){
+				var data = new FormData();
+				data.append("file_id",open_file_id);
+				data.append("file_context",$("#code_field").val());
+				var req = new XMLHttpRequest;
+				req.onreadystatechange = function(){
+					if(this.readyState == 4 && this.status == 200){
+						alert_div(this.responseText);
+						fetch_files();
+						$(".save_btn").attr("disabled",'disabled');
+						five_save_status = "saved";
+					}
+				}
+				req.open("post","save_file.php",true);
+				req.send(data);
+			}
+		}
+		function update_dark_mode(dark_mode){
 			var req = new XMLHttpRequest;
 			req.onreadystatechange = function(){
 				if(this.readyState == 4 && this.status == 200){
 					alert_div(this.responseText);
-					fetch_files();
-					$(".save_btn").attr("disabled",'disabled');
 				}
 			}
-			req.open("post","save_file.php",true);
-			req.send(data);
+			req.open("post","update_dark_mode.php?dark_mode="+dark_mode,false);
+			req.send();
 		}
 		function fetch_files(){
 			var req = new XMLHttpRequest;

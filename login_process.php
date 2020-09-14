@@ -17,6 +17,7 @@ if($row_num <= 0){
 }else{
 
 	$_SESSION['username']= $row['uname'];
+	$_SESSION['dark_mode']= $row['dark_mode'];
 	echo "ok";
 }
 
