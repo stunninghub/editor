@@ -18,22 +18,43 @@ if(empty($_SESSION['username'])){
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Overpass+Mono&display=swap" rel="stylesheet">
 	<style type="text/css">
+		:root{
+			--BGcolor:#f3f3f3;
+			--anctcolor:#eee;
+
+			--text:#333;
+		}
+		::-webkit-scrollbar {
+			width: 6px;
+			appearance:none;
+		}
+		::-webkit-scrollbar-track {
+			background: transparent;
+			appearance:none;
+		}
+		::-webkit-scrollbar-thumb {
+			background: rgba(100,100,100,0.4);
+			border-radius: 50px;
+		}
 		.user_files{
 			width:200px;
 			height: 200px;
 		}
 		.alert_div{
-			width:150px;
+			width:200px;
 			position: fixed;
-			color:#fff;
+			color:var(--anctcolor);
 			border-radius:5px;
 			bottom:-100px;
 			left:10px;
 			padding:15px;
-			background:#444;
-			text-align:center;
+			background:var(--text);
 			z-index: 9999;
+			white-space: pre-wrap;
+			word-wrap: break-word;
 		}
 		@media screen and (max-width:400px){
 			.nav_buttons{
@@ -51,12 +72,12 @@ if(empty($_SESSION['username'])){
 				display: none;
 			}
 			.mob_bottom_btn{
-				display: none4
+				display: none;
 			}
 		}
 	</style>
 </head>
-<body>
+<body style="background: var(--BGcolor);color:var(--text);">
 	<div class="alert_div">Alert</div>
 	<nav class="navbar mob_nav navbar-expand-md bg-light navbar-light sticky-top">
 	  <!-- Brand -->
@@ -75,32 +96,35 @@ if(empty($_SESSION['username'])){
 	</nav>
 	<br>
 	<div class="container">
-	<h1 class="desk_nav">Hello <?php echo ucfirst(strtolower($_SESSION['username']));?> !</h1>
+	<h3 class="desk_nav">Hello <?php echo ucfirst(strtolower($_SESSION['username']));?> !</h3>
 	<div class="nav_buttons">
-		<button class="btn btn-warning" onclick="run_project();">Run</button>
 		<button class="btn btn-primary" data-target="#new_file" data-toggle="modal">New File</button>
 		<button class="btn btn-success save_btn" onclick="save_file();">Save</button>
+		<button class="btn btn-warning" onclick="run_project();">Run</button>
+		<div class="btn material-icons" onclick="dark_light_mode();" style="background:var(--anctcolor);color:var(--text);">
+			brightness_medium
+		</div>
 		<button class="btn btn-danger float-right" onclick="document.location = 'logout.php'">Sign Out</button>
 	<br>
 	<br>
 	</div>
 	<div class="row">
 		<div class="col-4 desk_file_container">
-			<div class="user_files card" style="width: 100%;height:400px;">
+			<div class="user_files card" style="width: 100%;height:400px;background: var(--anctcolor);">
 				<div class="card-header pb-1">
 					<h5>Files</h5>
 				</div>
-				<div class="card-body files_container" style="overflow-y: scroll;">
+				<div class="card-body files_container" style="overflow-y: scroll;border:0px;">
 				</div>
 			</div>
 		</div>
 		<div class="col">
-			<div class="user_files card" style="width: 100%;height:400px;">
+			<div class="user_files card" style="width: 100%;height:400px;background: var(--anctcolor);">
 				<div class="card-header pb-1 bg-warning">
-					<h5 class="file_name_display">File name</h5>
+					<h5 class="file_name_display text-dark">File name</h5>
 				</div>
-				<div class="card-body p-0">
-					<textarea style="width: 100%;height:100%;outline:none; border:0px;" id="code_field" placeholder="Code" autocorrect="off" autocapitalize="off" spellcheck="false" autocomplete="off" class="form-control"></textarea>
+				<div class="card-body p-0" style="overflow-y:scroll;background:var(--BGcolor);">
+					<textarea style="width:	100%;height:100vh;outline:none; border:0px;background:var(--anctcolor);color:var(--text);font-family: 'Overpass Mono', monospace;" id="code_field" placeholder="Code" autocorrect="off" autocapitalize="off" spellcheck="false" autocomplete="off" class="form-control"></textarea>
 				</div>
 			</div>
 		</div>
@@ -112,25 +136,25 @@ if(empty($_SESSION['username'])){
     <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"></button>
     <div class="dropdown-menu">
     	<button class="dropdown-item btn btn-warning" onclick="run_project();">Run</button>
-		<button class="dropdown-item btn btn-primary" data-target="#new_file" data-toggle="modal">New File</button>
+		<button class="dropdown-item btn btn-primary" onclick="toggle_modal();">New File</button>
 		<button class="dropdown-item btn btn-success save_btn" onclick="save_file();">Save</button>
 		<button class="dropdown-item btn btn-danger float-right" onclick="document.location = 'logout.php'">Sign Out</button>
     </div>
  </div>
 
-<div class="modal fade" id="new_file">
+<div class="modal" id="new_file">
 	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
+		<div class="modal-content" style="background: var(--BGcolor);">
+			<div class="modal-header" style="border:0px;">
 				<h3>Create new file</h3>
 			</div>
 			<div class="modal-body">
 				<label>File name :</label>
-				<input type="text" autocomplete="off" name="new_file_name" id="new_file_name" class="form-control" >
+				<input type="text" autocomplete="off" name="new_file_name" id="new_file_name" class="form-control" autofocus=""style="background: var(--anctcolor);border:0px;color:var(--text);" placeholder="text here ...">
 			</div>
-			<div class="modal-footer">
-				<button class="btn btn-danger" data-target="#new_file" data-toggle="modal">Cancel</button>
+			<div class="modal-footer" style="border:0px;">
 				<button class="btn btn-success" onclick="create_new_file();">Create</button>
+				<button class="btn btn-danger" data-target="#new_file" data-toggle="modal">Cancel</button>
 			</div>
 		</div>
 	</div>
@@ -145,6 +169,28 @@ if(empty($_SESSION['username'])){
 			fetch_files();
 			if(open_file_id == "" || open_file_id == null){
 				$(".save_btn").attr("disabled",'disabled');
+			}
+		}
+
+		function dark_light_mode(){
+			var CssRoot = getComputedStyle(document.body);
+			var BGcolor = CssRoot.getPropertyValue('--BGcolor');
+
+			if(BGcolor == "#f3f3f3"){
+				document.documentElement.style.setProperty('--BGcolor', '#333');
+				document.documentElement.style.setProperty('--anctcolor', '#222');
+				document.documentElement.style.setProperty('--text', '#fff');
+			}else{
+				document.documentElement.style.setProperty('--BGcolor', '#f3f3f3');
+				document.documentElement.style.setProperty('--anctcolor', '#eee');
+				document.documentElement.style.setProperty('--text', '#333');
+			}
+		}
+		function toggle_modal(){
+			if($('#new_file').modal('toggle')){
+				setTimeout(function(){
+					document.getElementById('new_file_name').focus();
+				},200);
 			}
 		}
 		$(document).bind("keyup keydown", function(e){
@@ -183,9 +229,9 @@ if(empty($_SESSION['username'])){
 		function alert_div(alert){
 			clearTimeout(alert_div_time);
 			$(".alert_div").html(alert);
-			$(".alert_div").animate({'bottom':'10px'},300);
+			$(".alert_div").animate({'bottom':'10px','opacity':'1'},300);
 			alert_div_time = setTimeout(function(){
-				$(".alert_div").animate({'bottom':'-100px'},300);
+				$(".alert_div").animate({'bottom':'-100px','opacity':'0'},300);
 			},3500);
 		}
 		function file_name_display(name){
