@@ -1,3 +1,13 @@
+<?php
+session_start();
+if(!empty($_SESSION['username'])){
+	?>
+		<script type="text/javascript">
+			document.location = "editor.php";
+		</script>
+	<?
+}
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -16,7 +26,7 @@
 		<br>
 		<div class="card form">
 			<div class="card-header">
-				<h4>Create Account</h4>
+				<h4>Login</h4>
 			</div>
 			<div class="card-body">
 				<label>Username</label>
@@ -27,14 +37,14 @@
 				<div class="alerts">
 				</div>
 				<br>
-				<button class="btn btn-primary" onclick="createaccount();">Create</button>
-				<span class="float-right mt-2">Already have a account <a href="login.html">login now</a>.</span>
+				<button class="btn btn-success" onclick="login();">Login</button>
+				<span class="float-right mt-2">Don't have account <a href="createaccount.php">Create now</a>.</span>
 			</div>
 		</div>
 	</div>
 
 	<script type="text/javascript">
-		function createaccount(){
+		function login(){
 			var req = new XMLHttpRequest;
 			req.onreadystatechange = function(){
 				if(this.readyState == 4 && this.status == 200){
@@ -45,7 +55,7 @@
 					}
 				}
 			}
-			req.open("post","crtacc_process.php?username="+$("#username").val()+"&password="+$("#password").val(),false);
+			req.open("post","login_process.php?username="+$("#username").val()+"&password="+$("#password").val(),false);
 			req.send();
 		}
 	</script>

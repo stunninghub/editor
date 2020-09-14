@@ -1,5 +1,12 @@
 <?php
 session_start();
+if(empty($_SESSION['username'])){
+	?>
+		<script type="text/javascript">
+			document.location = "login.php";
+		</script>
+	<?
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -21,28 +28,65 @@ session_start();
 			position: fixed;
 			color:#fff;
 			border-radius:5px;
-			bottom:-300px;
-			left:30px;
+			bottom:-100px;
+			left:10px;
 			padding:15px;
 			background:#444;
 			text-align:center;
 			z-index: 9999;
 		}
+		@media screen and (max-width:400px){
+			.nav_buttons{
+				display: none;
+			}
+			.desk_nav{
+				display: none;
+			}
+			.desk_file_container{
+				display: none;
+			}
+		}
+		@media screen and (min-width:400px){
+			.mob_nav{
+				display: none;
+			}
+			.mob_bottom_btn{
+				display: none4
+			}
+		}
 	</style>
 </head>
 <body>
 	<div class="alert_div">Alert</div>
+	<nav class="navbar mob_nav navbar-expand-md bg-light navbar-light sticky-top">
+	  <!-- Brand -->
+	  <a class="navbar-brand" href="#"><?php echo ucfirst(strtolower($_SESSION['username']));?></a>
+
+	  <!-- Toggler/collapsibe Button -->
+	  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+	    <span class="navbar-toggler-icon"></span>
+	  </button>
+
+	  <!-- Navbar links -->
+	  <div class="collapse navbar-collapse" id="collapsibleNavbar">
+	    <ul class="navbar-nav files_container mt-3">
+	    </ul>
+	  </div>
+	</nav>
 	<br>
 	<div class="container">
-	<h1>Hello <?php echo ucfirst(strtolower($_SESSION['username']));?> !</h1>
-	<button class="btn btn-warning" onclick="run_project();">Run</button>
-	<button class="btn btn-primary" data-target="#new_file" data-toggle="modal">New File</button>
-	<button class="btn btn-success save_btn" onclick="save_file();">Save</button>
-	<button class="btn btn-danger float-right" onclick="document.location = 'logout.php'">Sign Out</button>
-	<br><br>
+	<h1 class="desk_nav">Hello <?php echo ucfirst(strtolower($_SESSION['username']));?> !</h1>
+	<div class="nav_buttons">
+		<button class="btn btn-warning" onclick="run_project();">Run</button>
+		<button class="btn btn-primary" data-target="#new_file" data-toggle="modal">New File</button>
+		<button class="btn btn-success save_btn" onclick="save_file();">Save</button>
+		<button class="btn btn-danger float-right" onclick="document.location = 'logout.php'">Sign Out</button>
+	<br>
+	<br>
+	</div>
 	<div class="row">
-		<div class="col-4">
-			<div class="user_files card" style="width: 100%;height:300px;">
+		<div class="col-4 desk_file_container">
+			<div class="user_files card" style="width: 100%;height:400px;">
 				<div class="card-header pb-1">
 					<h5>Files</h5>
 				</div>
@@ -50,8 +94,8 @@ session_start();
 				</div>
 			</div>
 		</div>
-		<div class="col-8">
-			<div class="user_files card" style="width: 100%;height:300px;">
+		<div class="col">
+			<div class="user_files card" style="width: 100%;height:400px;">
 				<div class="card-header pb-1 bg-warning">
 					<h5 class="file_name_display">File name</h5>
 				</div>
@@ -62,6 +106,17 @@ session_start();
 		</div>
 	</div>
 </div>
+<br>
+
+<div class="dropup mob_bottom_btn" style="position:fixed;z-index: 99;bottom:10px;right:10px;">
+    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"></button>
+    <div class="dropdown-menu">
+    	<button class="dropdown-item btn btn-warning" onclick="run_project();">Run</button>
+		<button class="dropdown-item btn btn-primary" data-target="#new_file" data-toggle="modal">New File</button>
+		<button class="dropdown-item btn btn-success save_btn" onclick="save_file();">Save</button>
+		<button class="dropdown-item btn btn-danger float-right" onclick="document.location = 'logout.php'">Sign Out</button>
+    </div>
+ </div>
 
 <div class="modal fade" id="new_file">
 	<div class="modal-dialog">
@@ -85,7 +140,7 @@ session_start();
 			window.open("<?php echo $_SESSION['username'];?>/");
 		}
 		var open_file_id = "";
-
+		window.onbeforeunload = function(e) { return "Save your work otherwise your work will be lost."; };
 		window.onload = function(){
 			fetch_files();
 			if(open_file_id == "" || open_file_id == null){
@@ -128,9 +183,9 @@ session_start();
 		function alert_div(alert){
 			clearTimeout(alert_div_time);
 			$(".alert_div").html(alert);
-			$(".alert_div").animate({'bottom':'40px'},600);
+			$(".alert_div").animate({'bottom':'10px'},300);
 			alert_div_time = setTimeout(function(){
-				$(".alert_div").animate({'bottom':'-300px'},600);
+				$(".alert_div").animate({'bottom':'-100px'},300);
 			},3500);
 		}
 		function file_name_display(name){
