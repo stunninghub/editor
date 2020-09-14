@@ -26,14 +26,17 @@ $new_file_type = strtolower($name_array[1]);
 
 $sql_insert_file_name = "INSERT INTO `files` (`file_id`,`file_owner`,`file_name`,`file_address`,`file_type`) VALUES ('".$_SESSION['username']."_$new_file_name"."_$u_id','".$_SESSION['username']."','$new_file_name','".$_SESSION['username']."/$new_file_name".".$new_file_type','$new_file_type')";
 
-if(mysqli_query($con,$sql_insert_file_name)){
-	if(fopen($_SESSION['username']."/".$new_file_name.".".$new_file_type, "w")){
-		echo "ok";
-	}else{
-		echo"File creation failed";
-	}
+if($new_file_type != "html" && $new_file_type != "css" && $new_file_type != "js"){
+    echo "Can't able to create '".$new_file_type."' file";
 }else{
-	echo "SQL Error";
+    if(mysqli_query($con,$sql_insert_file_name)){
+    	if(fopen($_SESSION['username']."/".$new_file_name.".".$new_file_type, "w")){
+    		echo "ok";
+    	}else{
+    		echo"File creation failed";
+    	}
+    }else{
+    	echo "SQL Error";
+    }
 }
-
 ?>

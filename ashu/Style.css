@@ -1,0 +1,12 @@
+body{
+background:#f7f7f7;
+}
+
+button{
+background:dodgerblue;
+color:#fff;
+padding:10px;
+border:0px;
+border-radius:10px;
+outline:none;
+}

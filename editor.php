@@ -56,7 +56,7 @@ session_start();
 					<h5 class="file_name_display">File name</h5>
 				</div>
 				<div class="card-body p-0">
-					<textarea style="width: 100%;height:100%;outline:none; border:0px;" id="code_field" placeholder="Code" autocorrect="off" autocapitalize="off" spellcheck="false" onkeyup="$('.save_btn').attr('disabled',false);" autocomplete="off" class="form-control"></textarea>
+					<textarea style="width: 100%;height:100%;outline:none; border:0px;" id="code_field" placeholder="Code" autocorrect="off" autocapitalize="off" spellcheck="false" autocomplete="off" class="form-control"></textarea>
 				</div>
 			</div>
 		</div>
@@ -99,6 +99,13 @@ session_start();
 			        save_file();
 			    }
 		    }
+		});
+		$("#code_field").bind("keyup keydown", function(){
+			$(document).bind("keyup keydown", function(e){
+				if(!(e.ctrlKey && e.which == 83)){
+					$('.save_btn').attr('disabled',false);
+				}
+			});
 		});
 		function open_file(file_id){
 			open_file_id = file_id;
@@ -164,7 +171,7 @@ session_start();
 						$('#new_file').modal('toggle');	
 						fetch_files();
 					}else{
-						alert(this.responseText);
+						alert_div(this.responseText);
 					}
 				}
 			}
@@ -172,7 +179,18 @@ session_start();
 			req.send();
 		}
 
-
+		function delete_file(file_id){
+			var req = new XMLHttpRequest;
+			req.onreadystatechange = function(){
+				if(this.readyState == 4 && this.status == 200){
+					$("#code_field").val("");
+					fetch_files();
+					alert_div(this.responseText);
+				}
+			}
+			req.open("post","delete_file.php?file_id="+file_id,false);
+			req.send();
+		}
 	</script>
 </body>
 </html>

@@ -1,0 +1,3 @@
+function as(){
+alert("hello");
+}
