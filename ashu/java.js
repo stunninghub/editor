@@ -1,3 +1,0 @@
-function as(){
-alert("hello");
-}

@@ -5,7 +5,7 @@ if(!empty($_SESSION['username'])){
 		<script type="text/javascript">
 			document.location = "editor.php";
 		</script>
-	<?
+	<?php
 }
 ?>
 <!DOCTYPE html>
