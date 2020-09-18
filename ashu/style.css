@@ -1,3 +1,13 @@
 body{
 background:#f7f7f7;
 }
+
+button{
+
+padding:10px;
+background:dodgerblue;
+border:0px;
+border-radius:20px;
+color:#fff;
+box-shadow:0px 4px 8px rgba(0,0,0,0.3);
+}
